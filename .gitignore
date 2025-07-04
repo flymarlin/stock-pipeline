@@ -1,0 +1,8 @@
+
+# generated files
+data/
+results/
+reports/
+__pycache__/
+*.parquet
+
