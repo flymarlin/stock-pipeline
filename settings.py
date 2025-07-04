@@ -1,4 +1,3 @@
-%%writefile 00_settings.py
 import os, datetime
 FMP_API_KEY     = os.getenv("FMP_API_KEY")
 MARKETAUX_KEY   = os.getenv("MARKETAUX_KEY")

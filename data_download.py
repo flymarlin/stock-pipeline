@@ -1,5 +1,4 @@
-%%writefile 01_data_download.py
-import os, pathlib, time, json, requests, pandas as pd, yfinance as yf, 00_settings as cfg
+import os, pathlib, time, json, requests, pandas as pd, yfinance as yf, settings as cfg
 from datetime import date, timedelta
 
 # --- フォルダ作成 -----------------------------------------------------------
