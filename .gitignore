@@ -2,22 +2,19 @@
 __pycache__/
 *.py[cod]
 
-# ---- データ・生成物 ----
-data/
-reports/
-factors/
-*.csv
-*.parquet
-
 # ---- 仮想環境・設定 ----
 env/
 venv/
 .env
 
-# generated files
-data/
-results/
-reports/
-__pycache__/
+# ---- データ・生成物 ----
+data/                # 生データ
+results/             # 実験結果
+reports/             # レポート出力
+factors/             # 特徴量キャッシュ
+*.csv                # 個別に残したい CSV が無ければ
 *.parquet
+
+# ---- その他 ----
+*.ipynb_checkpoints
 
