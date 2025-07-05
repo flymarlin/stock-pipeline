@@ -1,0 +1,30 @@
+name: Claude Code Action 🤖
+
+on:
+  issue_comment:
+    types: [created]                # Issue コメント
+  pull_request_review_comment:
+    types: [created]                # PR 行内コメント
+  pull_request_review:
+    types: [submitted]              # PR 全体レビュー
+
+jobs:
+  claude:
+    # コメントやレビュー本文に @claude が入っていない時はスキップ
+    if: contains(toJson(github.event), '@claude')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write               # 📝 Claude が push するため
+      pull-requests: write
+      issues: read
+    steps:
+      - uses: actions/checkout@v4   # リポジトリを取得
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Code
+        uses: anthropics/claude-code-action@beta
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          allowed_tools: [bash, git, gh]   # 実行を許す CLI
+
