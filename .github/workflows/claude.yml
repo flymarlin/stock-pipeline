@@ -2,17 +2,16 @@ name: Claude Code Action 🤖
 
 on:
   issue_comment:
-    types: [created]              # Issue のコメント
+    types: [created]
   pull_request_review_comment:
-    types: [created]              # PR の行内コメント
+    types: [created]
   pull_request_review:
-    types: [submitted]            # PR 全体レビュー
-  issues:                         # Issue 本文・タイトルでも起動
+    types: [submitted]
+  issues:
     types: [opened, edited]
 
 jobs:
   claude:
-    # 本文・コメント・レビューに @claude が含まれる時だけ実行
     if: |
       (github.event_name == 'issue_comment' &&
        contains(github.event.comment.body, '@claude')) ||
@@ -26,9 +25,10 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write             # Claude が push できるように
+      contents: write
       pull-requests: write
       issues: read
+      id-token: write          # ← ★ 追加（OIDC が必要）
 
     steps:
       - uses: actions/checkout@v4
@@ -36,10 +36,10 @@ jobs:
           fetch-depth: 1
 
       - name: Run Claude Code
-        uses: anthropics/claude-code-action@v0   # ← ★ ここを v0 に変更済み
+        uses: anthropics/claude-code-action@v0
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          allowed_tools: |                       # ← ブロック形式で列挙
+          allowed_tools: |
             bash
             git
             gh
