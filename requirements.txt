@@ -2,3 +2,6 @@ pandas
 yfinance
 requests
 vectorbt
+lightgbm
+joblib
+scikit-learn
