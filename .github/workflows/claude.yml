@@ -2,29 +2,42 @@ name: Claude Code Action 🤖
 
 on:
   issue_comment:
-    types: [created]                # Issue コメント
+    types: [created]
   pull_request_review_comment:
-    types: [created]                # PR 行内コメント
+    types: [created]
   pull_request_review:
-    types: [submitted]              # PR 全体レビュー
+    types: [submitted]
+  issues:                          # Issue 本文にも反応させたい場合
+    types: [opened, edited]
 
 jobs:
   claude:
-    # コメントやレビュー本文に @claude が入っていない時はスキップ
-    if: contains(toJson(github.event), '@claude')
+    if: |
+      (github.event_name == 'issue_comment' &&
+       contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'issues' &&
+       (contains(github.event.issue.body, '@claude') ||
+        contains(github.event.issue.title, '@claude'))) ||
+      (github.event_name == 'pull_request_review_comment' &&
+       contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review' &&
+       contains(github.event.review.body, '@claude'))
     runs-on: ubuntu-latest
     permissions:
-      contents: write               # 📝 Claude が push するため
+      contents: write
       pull-requests: write
       issues: read
     steps:
-      - uses: actions/checkout@v4   # リポジトリを取得
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
       - name: Run Claude Code
-        uses: anthropics/claude-code-action@beta
+        uses: anthropics/claude-code-action@v1    # 安定版タグ
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          allowed_tools: [bash, git, gh]   # 実行を許す CLI
+          allowed_tools: |
+            bash
+            git
+            gh
 
